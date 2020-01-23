@@ -1,7 +1,6 @@
 const mongoose = require ('mongoose');
 
 const UserSchema = new mongoose.Schema ({
-    _id: mongoose.Schema.Types.ObjectId,
     name: {
         type: String,
         require: true,
@@ -20,7 +19,7 @@ const UserSchema = new mongoose.Schema ({
         max: 1024
     },
     created: {
-        type: Data,
+        type: Date,
         default: Date.now ()
     },
     block: {
@@ -29,4 +28,6 @@ const UserSchema = new mongoose.Schema ({
     }
 });
 
-module.exports = mongoose.model ('User', UserSchema);
+const userModel = mongoose.model ('User', UserSchema);
+
+module.exports = userModel;

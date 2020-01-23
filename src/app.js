@@ -3,6 +3,8 @@ const config = require ('./config/default');
 const {createConnection} = require ('./db/index');
 
 const app = express ();
+app.use (express.json ());
+require ('./routers/index') (app);
 
 const PORT = config.port || 3000;
 
@@ -15,5 +17,9 @@ const start = async () => {
         process.exit (1);
     }
 };
+
+app.get ('/', (req, res) => {
+    res.sendFile (__dirname + '/index.html');
+});
 
 start ();
