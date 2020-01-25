@@ -18,13 +18,13 @@ const UserSchema = new mongoose.Schema ({
         min: 8,
         max: 1024
     },
+    role: {
+        type: String,
+        enum: ['teacher', 'student']
+    },
     created: {
         type: Date,
         default: Date.now ()
-    },
-    block: {
-        type: Boolean,
-        default: false
     }
 });
 

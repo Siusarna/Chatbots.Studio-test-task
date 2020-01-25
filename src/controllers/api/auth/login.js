@@ -1,5 +1,5 @@
 const bcrypt = require ('bcryptjs');
-const {getAndUpdateToken} = require ('../../../helpers/auth/index');
+const {getAndUpdateTokens} = require ('../../../helpers/auth/index');
 const mongoose = require ('mongoose');
 const config = require ('../../../config/default');
 const {readOneDocFromDb} = require ('../../../db/index');
@@ -26,7 +26,7 @@ const login = async (req, res) => {
             return res.status (400).json ({message: 'Incorrect login or password'});
         }
 
-        const {accessToken, refreshToken} = await getAndUpdateToken (user._id);
+        const {accessToken, refreshToken} = await getAndUpdateTokens (user._id);
         setDataInCookie (res, 'accessToken', accessToken, config.jwt.tokens.access.expiresIn);
         setDataInCookie (res, 'refreshToken', refreshToken, config.jwt.tokens.refresh.expiresIn);
         res.send ('ok');

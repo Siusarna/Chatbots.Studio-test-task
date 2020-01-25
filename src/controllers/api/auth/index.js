@@ -1,7 +1,11 @@
 const {login} = require ('./login');
-const {register} = require ('./register');
+const {registerStudent} = require ('./registerStudent');
+const {registerTeacher} = require ('./registerTeacher');
 
 module.exports = {
     login,
-    register
+    register: {
+        registerStudent,
+        registerTeacher
+    }
 };

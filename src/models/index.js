@@ -1,7 +1,11 @@
-const User = require ('./user');
+const Student = require ('./student');
 const Token = require ('./token');
+const Teacher = require ('./teacher');
+const User = require ('./user');
 
 module.exports = {
-    User,
-    Token
+    Student,
+    Token,
+    Teacher,
+    User
 };

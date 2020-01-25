@@ -1,6 +1,8 @@
-const index = require ('../../controllers/api/auth/index');
+const auth = require ('../../controllers/api/auth/index');
+const middleware = require ('../../middlewares/index');
 
 module.exports = app => {
-    app.post ('/register', index.register);
-    app.post ('/login', index.login);
+    app.post ('/register/teacher', auth.register.registerTeacher);
+    app.post ('/register/student', auth.register.registerStudent);
+    app.post ('/login', auth.login);
 };

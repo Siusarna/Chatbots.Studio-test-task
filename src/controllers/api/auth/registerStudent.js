@@ -4,9 +4,10 @@ const {isEmail, isLength} = require ('validator');
 const {readOneDocFromDb, createDocInDb} = require ('../../../db/index');
 require ('../../../models/index');
 
+const Student = mongoose.model ('Student');
 const User = mongoose.model ('User');
 
-const validData = (name, email, pass) => {
+const validData = (name, email, pass, group) => {
     if (!isEmail (email)) {
         return {message: 'Wrong email'};
     }
@@ -16,6 +17,9 @@ const validData = (name, email, pass) => {
     if (!isLength (name, {min: 4})) {
         return {message: 'The name is too short'};
     }
+    if (!group) {
+        return {message: 'Field "Group" is required'};
+    }
 };
 
 const hashPass = pass => {
@@ -23,13 +27,13 @@ const hashPass = pass => {
     return bcrypt.hashSync (pass, salt);
 };
 
-const register = async (req, res) => {
+const registerStudent = async (req, res) => {
     try {
-        const {name, email, password} = req.body;
+        const {name, email, password, group} = req.body;
 
-        const validatedInput = validData (name, email, password);
+        const validatedInput = validData (name, email, password, group);
         if (validatedInput) {
-            res.status (400).json (validatedInput);
+            return res.status (400).json (validatedInput);
         }
 
         const candidate = await readOneDocFromDb (User, {email});
@@ -37,14 +41,16 @@ const register = async (req, res) => {
             return res.status (400).json ({message: 'User already exists'});
         }
         const hashedPassword = hashPass (password);
-        await createDocInDb (User, {name, email, password: hashedPassword});
+        const user = await createDocInDb (User, {email, password: hashedPassword, name, role: 'student'});
+        await createDocInDb (Student, {_user: user._id, group});
 
         res.status (201).json ({message: 'registration was successful'});
     } catch (e) {
+        console.log (e);
         res.status (500).json ({message: 'Something went wrong'});
     }
 };
 
 module.exports = {
-    register
+    registerStudent
 };
