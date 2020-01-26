@@ -13,7 +13,7 @@ const validData = (name) => {
 
 module.exports = async (req, res) => {
     try {
-        const {name} = req.params.name;
+        const {name} = req.params;
 
         const validatedInput = validData (name);
         if (validatedInput) {
@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
 
         const groups = await readOneDocFromDb (Group, {name});
 
-        res.status (200).json (JSON.parse (groups));
+        res.status (200).json (groups);
     } catch (e) {
         console.log (e);
         res.status (500).json ({message: 'Something went wrong'});

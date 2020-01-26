@@ -1,5 +1,17 @@
 const mongoose = require ('mongoose');
-const Student = require ('./student');
+
+const StudentSchema = new mongoose.Schema ({
+    _user: {
+        type: mongoose.Schema.Types.ObjectId,
+        require: true,
+        ref: 'User'
+    },
+    group: {
+        type: mongoose.Schema.Types.ObjectId,
+        require: true,
+        ref: 'Group'
+    }
+});
 
 const GroupSchema = mongoose.Schema ({
     name: {
@@ -8,7 +20,7 @@ const GroupSchema = mongoose.Schema ({
         min: 2
     },
     students: {
-        type: [Student],
+        type: [StudentSchema],
         default: []
     }
 });

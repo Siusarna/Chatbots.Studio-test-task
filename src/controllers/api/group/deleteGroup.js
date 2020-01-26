@@ -1,5 +1,5 @@
 const {isLength} = require ('validator');
-const {deleteOneDocFromDb} = require ('../../../db/index');
+const {deleteOneDocFromDb, readOneDocFromDb} = require ('../../../db/index');
 const mongoose = require ('mongoose');
 require ('../../../models/index');
 
@@ -18,6 +18,11 @@ module.exports = async (req, res) => {
         const validatedInput = validData (name);
         if (validatedInput) {
             return res.status (400).json (validatedInput);
+        }
+
+        const candidate = await readOneDocFromDb (Group, {name});
+        if (!candidate) {
+            return res.status (400).json ({message: 'This group doesn\'t found'});
         }
 
         await deleteOneDocFromDb (Group, {name});
