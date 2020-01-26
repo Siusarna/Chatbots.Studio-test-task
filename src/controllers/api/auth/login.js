@@ -3,7 +3,7 @@ const {getAndUpdateTokens} = require ('../../../helpers/auth/index');
 const mongoose = require ('mongoose');
 const config = require ('../../../config/default');
 const {readOneDocFromDb} = require ('../../../db/index');
-const setDataInCookie = require ('./setDataInCookie');
+const setDataInCookie = require ('../../setDataInCookie');
 require ('../../../models/index');
 
 const User = mongoose.model ('User');

@@ -1,11 +1,12 @@
 const bcrypt = require ('bcryptjs');
 const mongoose = require ('mongoose');
 const {isEmail, isLength} = require ('validator');
-const {readOneDocFromDb, createDocInDb} = require ('../../../db/index');
-require ('../../../models/index');
+const {readOneDocFromDb, createDocInDb, updateOneDocInDb} = require ('../../../db');
+require ('../../../models');
 
 const Student = mongoose.model ('Student');
 const User = mongoose.model ('User');
+const Group = mongoose.model ('Group');
 
 const validData = (name, email, pass, group) => {
     if (!isEmail (email)) {
@@ -27,9 +28,10 @@ const hashPass = pass => {
     return bcrypt.hashSync (pass, salt);
 };
 
-const registerStudent = async (req, res) => {
+
+const createStudent = async (req, res) => {
     try {
-        const {name, email, password, group} = req.body;
+        const {name, email, password, groupName} = req.body;
 
         const validatedInput = validData (name, email, password, group);
         if (validatedInput) {
@@ -40,9 +42,17 @@ const registerStudent = async (req, res) => {
         if (candidate) {
             return res.status (400).json ({message: 'User already exists'});
         }
+
+        const group = await readOneDocFromDb (Group, {groupName});
+        if (!group) {
+            return res.status (400).json ({message: 'This group doesn\'t exist'});
+        }
+
         const hashedPassword = hashPass (password);
         const user = await createDocInDb (User, {email, password: hashedPassword, name, role: 'student'});
-        await createDocInDb (Student, {_user: user._id, group});
+        const student = await createDocInDb (Student, {_user: user._id, group: group._id});
+        group.students.push (student);
+        await updateOneDocInDb (Group, {groupName}, {students: group.students});
 
         res.status (201).json ({message: 'registration was successful'});
     } catch (e) {
@@ -52,5 +62,5 @@ const registerStudent = async (req, res) => {
 };
 
 module.exports = {
-    registerStudent
+    createStudent
 };

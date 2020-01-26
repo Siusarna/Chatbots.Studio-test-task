@@ -2,8 +2,8 @@ const bcrypt = require ('bcryptjs');
 const mongoose = require ('mongoose');
 const config = require ('../../../config/default');
 const {isEmail, isLength} = require ('validator');
-const {readOneDocFromDb, createDocInDb} = require ('../../../db/index');
-require ('../../../models/index');
+const {readOneDocFromDb, createDocInDb} = require ('../../../db');
+require ('../../../models');
 
 const Teacher = mongoose.model ('Teacher');
 const User = mongoose.model ('User');
@@ -31,7 +31,7 @@ const hashPass = pass => {
     return bcrypt.hashSync (pass, salt);
 };
 
-const registerTeacher = async (req, res) => {
+const createTeacher = async (req, res) => {
     try {
         const {name, email, password, age, subject} = req.body;
 
@@ -56,5 +56,5 @@ const registerTeacher = async (req, res) => {
 };
 
 module.exports = {
-    registerTeacher
+    createTeacher
 };

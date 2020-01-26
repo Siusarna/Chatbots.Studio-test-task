@@ -1,7 +1,7 @@
 const config = require ('../config/default');
 const jwt = require ('jsonwebtoken');
 const {getAndUpdateTokens} = require ('../helpers/auth/index');
-const setDataInCookie = require ('../controllers/api/auth/setDataInCookie');
+const setDataInCookie = require ('../controllers/setDataInCookie');
 
 const setTokens = (tokens, res) => {
     const {accessToken, refreshToken} = tokens;
