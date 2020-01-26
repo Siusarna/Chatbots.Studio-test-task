@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
     const payload = jwt.verify (accessToken, config.jwt.secret);
     const user = await readOneDocFromDb (User, {_id: payload.userId});
     console.log (payload);
-    if (user.role !== 'teacher') {
+    if (user.role !== 'admin') {
         res.status (403).json ({message: 'Access is permanently forbidden for this user'});
     }
     next ();
