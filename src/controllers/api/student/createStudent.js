@@ -8,7 +8,7 @@ const Student = mongoose.model ('Student');
 const User = mongoose.model ('User');
 const Group = mongoose.model ('Group');
 
-const validData = (name, email, pass, group) => {
+const validData = (name, email, pass) => {
     if (!isEmail (email)) {
         return {message: 'Wrong email'};
     }
@@ -17,9 +17,6 @@ const validData = (name, email, pass, group) => {
     }
     if (!isLength (name, {min: 4})) {
         return {message: 'The name is too short'};
-    }
-    if (!group) {
-        return {message: 'Field "Group" is required'};
     }
 };
 
@@ -33,7 +30,7 @@ const createStudent = async (req, res) => {
     try {
         const {name, email, password, groupName} = req.body;
 
-        const validatedInput = validData (name, email, password, group);
+        const validatedInput = validData (name, email, password, groupName);
         if (validatedInput) {
             return res.status (400).json (validatedInput);
         }
@@ -43,7 +40,7 @@ const createStudent = async (req, res) => {
             return res.status (400).json ({message: 'User already exists'});
         }
 
-        const group = await readOneDocFromDb (Group, {groupName});
+        const group = await readOneDocFromDb (Group, {name: groupName});
         if (!group) {
             return res.status (400).json ({message: 'This group doesn\'t exist'});
         }
@@ -52,15 +49,13 @@ const createStudent = async (req, res) => {
         const user = await createDocInDb (User, {email, password: hashedPassword, name, role: 'student'});
         const student = await createDocInDb (Student, {_user: user._id, group: group._id});
         group.students.push (student);
-        await updateOneDocInDb (Group, {groupName}, {students: group.students});
+        await updateOneDocInDb (Group, {name: groupName}, {students: group.students});
 
-        res.status (201).json ({message: 'registration was successful'});
+        res.status (201).json ({message: 'New student was successfully created'});
     } catch (e) {
         console.log (e);
         res.status (500).json ({message: 'Something went wrong'});
     }
 };
 
-module.exports = {
-    createStudent
-};
+module.exports = createStudent;
