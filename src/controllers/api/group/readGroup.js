@@ -20,9 +20,9 @@ module.exports = async (req, res) => {
             return res.status (400).json (validatedInput);
         }
 
-        const groups = await readOneDocFromDb (Group, {name});
+        const group = await readOneDocFromDb (Group, {name});
 
-        res.status (200).json (groups);
+        res.status (200).json (group);
     } catch (e) {
         console.log (e);
         res.status (500).json ({message: 'Something went wrong'});

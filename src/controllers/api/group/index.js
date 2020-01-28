@@ -1,11 +1,11 @@
-const crateGroup = require ('./createGroup');
+const createGroup = require ('./createGroup');
 const readGroup = require ('./readGroup');
 const updateGroup = require ('./updateGroup');
 const deleteGroup = require ('./deleteGroup');
 const readAllGroup = require ('./readAllGroup');
 
 module.exports = {
-    crateGroup,
+    createGroup,
     readGroup,
     readAllGroup,
     updateGroup,

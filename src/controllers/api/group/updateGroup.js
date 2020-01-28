@@ -5,6 +5,7 @@ require ('../../../models/index');
 
 const Group = mongoose.model ('Group');
 const User = mongoose.model ('User');
+const Student = mongoose.model ('Student');
 
 const validData = (name) => {
     if (!isLength (name, {min: 2})) {
@@ -14,16 +15,32 @@ const validData = (name) => {
 
 const createStudentsArray = async (students) => {
     const failed = [];
-    const successfully = [];
+    const successful = [];
     for (const student of students) {
-        const user = await readOneDocFromDb (User, {email: student});
-        if (user && user.role === 'student') {
-            successfully.push (user);
+        const user = await readOneDocFromDb (User, {email: student, role: 'student'});
+        if (user) {
+            successful.push (await readOneDocFromDb (Student, {_user: user._id}));
         } else {
             failed.push (student);
         }
     }
-    return {failed, successfully};
+    return {failed, successful};
+};
+
+const deleteGroupInPreviousStudent = async (groupId) => {
+    const {students} = await readOneDocFromDb (Group, {_id: groupId});
+    for (const student of students) {
+        await updateOneDocInDb (Student, {_id: student._id}, {group: null});
+    }
+};
+
+const addNewGroupForStudents = async (newGroupName, successfulStudents) => {
+    const newGroup = await readOneDocFromDb (Group, {name: newGroupName});
+    const listWithUpdatedGroup = [];
+    for (const student of successfulStudents) {
+        listWithUpdatedGroup.push (await updateOneDocInDb (Student, {_id: student._id}, {group: newGroup._id}));
+    }
+    return listWithUpdatedGroup;
 };
 
 module.exports = async (req, res) => {
@@ -40,12 +57,14 @@ module.exports = async (req, res) => {
             return res.status (400).json ({message: 'This group doesn\'t found'});
         }
 
-        const {failed, successfully} = await createStudentsArray (students);
+        const {failed, successful} = await createStudentsArray (students);
         if (failed.length) {
             return res.status (400).json ({message: `This students doesn\'t found: ${JSON.stringify (failed)}`});
         }
 
-        await updateOneDocInDb (Group, {name}, {students: successfully});
+        await deleteGroupInPreviousStudent (candidate._id);
+        const studentListWithUpdatedGroup = await addNewGroupForStudents (name, successful);
+        await updateOneDocInDb (Group, {name}, {students: studentListWithUpdatedGroup});
 
         res.status (201).json ({message: 'Group successfully updated '});
     } catch (e) {
