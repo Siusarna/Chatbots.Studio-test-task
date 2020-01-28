@@ -66,7 +66,7 @@ module.exports = async (req, res) => {
             return res.status (400).json (validatedInput);
         }
 
-        const user = await readOneDocFromDb (User, {email});
+        const user = await readOneDocFromDb (User, {email, role: 'student'});
         if (!user) {
             return res.status (400).json ({message: 'This user doesn\'t found'});
         }
