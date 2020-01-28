@@ -31,7 +31,7 @@ const hashPass = pass => {
     return bcrypt.hashSync (pass, salt);
 };
 
-const createTeacher = async (req, res) => {
+module.exports = async (req, res) => {
     try {
         const {name, email, password, age, subject} = req.body;
 
@@ -53,8 +53,4 @@ const createTeacher = async (req, res) => {
         console.log (e);
         res.status (500).json ({message: 'Something went wrong'});
     }
-};
-
-module.exports = {
-    createTeacher
 };
