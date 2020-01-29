@@ -9,7 +9,7 @@ const setTokens = (tokens, res) => {
     setDataInCookie (res, 'refreshToken', refreshToken, config.jwt.tokens.refresh.expiresIn);
 };
 
-const processingRefreshToken = async (refreshToken, res, next) => {
+const processingRefreshToken = async (refreshToken, res, req, next) => {
     if (!refreshToken) {
         return res.status (401).json ({message: 'Tokens expired, please log in again'});
     }
@@ -23,6 +23,7 @@ const processingRefreshToken = async (refreshToken, res, next) => {
         return res.status (400).json ({message: 'Invalid token, please log in again'});
     }
     const tokens = await getAndUpdateTokens (payload.userId);
+    req.local = tokens;
     setTokens (tokens, res);
     next ();
 };
@@ -33,13 +34,13 @@ module.exports = async (req, res, next) => {
     }
     const {accessToken, refreshToken} = req.cookies;
     if (!accessToken) {
-        return processingRefreshToken (refreshToken, res, next);
+        return processingRefreshToken (refreshToken, res, req, next);
     }
     let payload;
     try {
         payload = jwt.verify (accessToken, config.jwt.secret);
     } catch (e) {
-        return processingRefreshToken (refreshToken, res, next);
+        return processingRefreshToken (refreshToken, res, req, next);
     }
     if (payload.type !== 'access') {
         return res.status (400).json ({message: 'Invalid token, please log in again'});

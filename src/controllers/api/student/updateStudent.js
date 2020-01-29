@@ -92,7 +92,7 @@ module.exports = async (req, res) => {
         }
         await updateOneDocInDb (User, {email}, objForUser);
 
-        res.status (201).json ({message: 'Student successfully updated '});
+        res.status (201).json ({message: 'Student was successfully updated '});
     } catch (e) {
         console.log (e);
         res.status (500).json ({message: 'Something went wrong'});

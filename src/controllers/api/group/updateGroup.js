@@ -66,7 +66,7 @@ module.exports = async (req, res) => {
         const studentListWithUpdatedGroup = await addNewGroupForStudents (name, successful);
         await updateOneDocInDb (Group, {name}, {students: studentListWithUpdatedGroup});
 
-        res.status (201).json ({message: 'Group successfully updated '});
+        res.status (201).json ({message: 'Group was successfully updated '});
     } catch (e) {
         console.log (e);
         res.status (500).json ({message: 'Something went wrong'});

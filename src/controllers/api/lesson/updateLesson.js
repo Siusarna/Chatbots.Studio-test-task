@@ -72,7 +72,7 @@ module.exports = async (req, res) => {
 
         await updateOneDocInDb (Lesson, {_id: lesson.id}, {objWithNewData});
 
-        res.status (201).json ({message: 'Lesson successfully updated '});
+        res.status (201).json ({message: 'Lesson was successfully updated '});
     } catch (e) {
         console.log (e);
         res.status (500).json ({message: 'Something went wrong'});

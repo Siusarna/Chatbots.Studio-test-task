@@ -20,8 +20,4 @@ const start = async () => {
     }
 };
 
-app.get ('/', (req, res) => {
-    res.sendFile (__dirname + '/index.html');
-});
-
 start ();

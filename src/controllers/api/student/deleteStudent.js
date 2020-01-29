@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
         await deleteOneDocFromDb (User, {email});
         await deleteOneDocFromDb (Student, {_id: student._id});
 
-        res.status (201).json ({message: 'Student successfully deleted'});
+        res.status (201).json ({message: 'Student was successfully deleted'});
     } catch (e) {
         console.log (e);
         res.status (500).json ({message: 'Something went wrong'});

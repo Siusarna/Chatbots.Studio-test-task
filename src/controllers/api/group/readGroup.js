@@ -19,8 +19,10 @@ module.exports = async (req, res) => {
         if (validatedInput) {
             return res.status (400).json (validatedInput);
         }
-
         const group = await readOneDocFromDb (Group, {name});
+        if (!group) {
+            return res.status (400).json ({message: 'This group doesn\'t found'});
+        }
 
         res.status (200).json (group);
     } catch (e) {

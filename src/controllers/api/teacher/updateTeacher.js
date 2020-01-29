@@ -83,7 +83,7 @@ module.exports = async (req, res) => {
         const newUser = await updateOneDocInDb (User, {email}, objForUser);
         await updateOneDocInDb (Teacher, {_user: newUser._id}, objForTeacher);
 
-        res.status (201).json ({message: 'Teacher successfully updated '});
+        res.status (201).json ({message: 'Teacher was successfully updated '});
     } catch (e) {
         console.log (e);
         res.status (500).json ({message: 'Something went wrong'});

@@ -22,12 +22,12 @@ module.exports = async (req, res) => {
 
         const candidate = await readOneDocFromDb (Group, {name});
         if (candidate) {
-            return res.status (400).json ({message: 'User already exists'});
+            return res.status (400).json ({message: 'Group already exists'});
         }
 
         await createDocInDb (Group, {name, students: arrayOfStudent});
 
-        res.status (201).json ({message: 'Group is created'});
+        res.status (201).json ({message: 'Group was successfully created'});
     } catch (e) {
         console.log (e);
         res.status (500).json ({message: 'Something went wrong'});

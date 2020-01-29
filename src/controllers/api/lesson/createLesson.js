@@ -58,7 +58,7 @@ module.exports = async (req, res) => {
         await updateOneDocInDb (Group, {name: group}, {lessons: groupCandidate.lessons});
         await updateOneDocInDb (Teacher, {_user: userForTeacherCandidate._id}, {lessons: teacherCandidate.lessons});
 
-        res.status (201).json ({message: 'Lesson successfully created'});
+        res.status (201).json ({message: 'Lesson was successfully created'});
     } catch (e) {
         console.log (e);
         res.status (500).json ({message: 'Something went wrong'});

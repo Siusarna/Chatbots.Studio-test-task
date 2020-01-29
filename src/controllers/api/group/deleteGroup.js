@@ -36,7 +36,7 @@ module.exports = async (req, res) => {
         await deleteGroupInPreviousStudent (candidate);
         await deleteOneDocFromDb (Group, {name});
 
-        res.status (201).json ({message: 'Group successfully deleted'});
+        res.status (201).json ({message: 'Group was successfully deleted'});
     } catch (e) {
         console.log (e);
         res.status (500).json ({message: 'Something went wrong'});

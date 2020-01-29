@@ -40,7 +40,7 @@ module.exports = async (req, res) => {
             return res.status (400).json (validatedInput);
         }
 
-        const candidate = await readOneDocFromDb (Teacher, {email});
+        const candidate = await readOneDocFromDb (User, {email});
         if (candidate) {
             return res.status (400).json ({message: 'User already exists'});
         }
@@ -48,7 +48,7 @@ module.exports = async (req, res) => {
         const user = await createDocInDb (User, {email, password: hashedPassword, name, role: 'teacher'});
         await createDocInDb (Teacher, {_user: user._id, subject, age});
 
-        res.status (201).json ({message: 'registration was successful'});
+        res.status (201).json ({message: 'New teacher was successfully created'});
     } catch (e) {
         console.log (e);
         res.status (500).json ({message: 'Something went wrong'});

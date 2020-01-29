@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
     try {
         const {id} = req.params;
 
-        const user = await readOneDocFromDb (User, {_id: id});
+        const user = await readOneDocFromDb (User, {_id: id, role: 'student'});
         if (!user) {
             return res.status (400).json ({message: 'Student with this id doesn\'t found'});
         }

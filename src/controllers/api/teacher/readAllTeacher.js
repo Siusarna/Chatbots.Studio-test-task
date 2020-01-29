@@ -10,7 +10,6 @@ module.exports = async (req, res) => {
         const users = await readDocFromDb (User, {role: 'teacher'});
         const teachers = [];
         for (const user of users) {
-            console.log (user);
             const {age, subject, experience} = await readOneDocFromDb (Teacher, {_user: user._id});
             const userWithAllData = {
                 _id: user.id,
