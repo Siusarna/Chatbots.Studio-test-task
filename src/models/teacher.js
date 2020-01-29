@@ -18,6 +18,11 @@ const TeacherSchema = new mongoose.Schema ({
     experience: {
         type: Number,
         default: 0
+    },
+    lessons: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Lesson',
+        default: []
     }
 });
 
