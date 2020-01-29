@@ -16,21 +16,22 @@ const generateAccessToken = (userId) => {
     return jwt.sign (payload, config.jwt.secret, options);
 };
 
-const generateRefreshToken = () => {
+const generateRefreshToken = (userId) => {
     const payload = {
-        id: uuid (),
+        tokenId: uuid (),
+        userId,
         type: config.jwt.tokens.refresh.type
     };
     const options = {expiresIn: config.jwt.tokens.refresh.expiresIn};
     return {
         refreshToken: jwt.sign (payload, config.jwt.secret, options),
-        id: payload.id
+        tokenId: payload.tokenId
     };
 };
 
-const getAndUpdateToken = async (userId) => {
+const getAndUpdateTokens = async (userId) => {
     const accessToken = generateAccessToken (userId);
-    const {refreshToken, tokenId} = generateRefreshToken ();
+    const {refreshToken, tokenId} = generateRefreshToken (userId);
     return updateOneDocInDb (Token, {userId}, {tokenId})
         .then (() => {
             return {
@@ -41,5 +42,5 @@ const getAndUpdateToken = async (userId) => {
 };
 
 module.exports = {
-    getAndUpdateToken
+    getAndUpdateTokens
 };

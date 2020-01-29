@@ -1,6 +1,6 @@
 const createDocInDb = async (model, data) => {
     const doc = new model (data);
-    await doc.save;
+    return doc.save ();
 };
 
 module.exports = {
