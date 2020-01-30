@@ -3,7 +3,6 @@
   "rules": {
     "linebreak-style": 0,
     "no-underscore-dangle": "off",
-    "no-console": "off",
     "max-len": [
       "error",
       125

@@ -20,7 +20,7 @@ const validData = (newSubject = 'test', newStartTime = '00:00', newEndTime = '00
   if (!isTime(newEndTime)) {
     message = 'Incorrect end time';
   }
-  return { message };
+  return message;
 };
 
 module.exports = async (req, res) => {
@@ -32,7 +32,7 @@ module.exports = async (req, res) => {
     const validatedInput = validData(newSubject, newStartTime, newEndTime);
     if (validatedInput) {
       return res.status(400)
-        .json(validatedInput);
+        .json({ message: validatedInput });
     }
 
     const lesson = await readOneDocFromDb(Lesson, { _id: id });
@@ -77,16 +77,14 @@ module.exports = async (req, res) => {
       await updateOneDocInDb(Teacher, { _id: previousTeacher._id }, { lessons: newLessonsListForPreviousTeacher });
 
       newTeacherFromDb.lessons.push(lesson._id);
-      objWithNewData.teacher = newTeacher || lesson.teacher;
+      objWithNewData.teacher = newTeacherFromDb._id || lesson.teacher;
       await updateOneDocInDb(Teacher, { _id: newTeacherFromDb._id }, { lessons: newTeacherFromDb.lessons });
     }
-
-    await updateOneDocInDb(Lesson, { _id: lesson.id }, { objWithNewData });
+    await updateOneDocInDb(Lesson, { _id: id }, objWithNewData);
 
     return res.status(201)
       .json({ message: 'Lesson was successfully updated ' });
   } catch (e) {
-    console.log(e);
     return res.status(500)
       .json({ message: 'Something went wrong' });
   }

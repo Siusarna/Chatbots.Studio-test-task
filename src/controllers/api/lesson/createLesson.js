@@ -23,7 +23,7 @@ const validData = (subject, classroom, startTime, endTime) => {
   if (!classroom) {
     message = 'Field "Classroom" is required';
   }
-  return { message };
+  return message;
 };
 
 module.exports = async (req, res) => {
@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
     const validatedInput = validData(subject, classroom, startTime, endTime);
     if (validatedInput) {
       return res.status(400)
-        .json(validatedInput);
+        .json({ message: validatedInput });
     }
 
     const groupCandidate = await readOneDocFromDb(Group, { name: group });
@@ -71,7 +71,6 @@ module.exports = async (req, res) => {
     return res.status(201)
       .json({ message: 'Lesson was successfully created' });
   } catch (e) {
-    console.log(e);
     return res.status(500)
       .json({ message: 'Something went wrong' });
   }

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const config = require('./config/default');
@@ -15,7 +16,6 @@ const start = async () => {
     await createConnection();
     app.listen(PORT, () => console.log(`App has been started on ${PORT}`));
   } catch (e) {
-    console.log(e);
     process.exit(1);
   }
 };

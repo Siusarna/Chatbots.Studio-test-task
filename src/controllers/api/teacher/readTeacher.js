@@ -30,7 +30,6 @@ module.exports = async (req, res) => {
     return res.status(200)
       .json(teacher);
   } catch (e) {
-    console.log(e);
     return res.status(500)
       .json({ message: 'Something went wrong' });
   }

@@ -18,15 +18,11 @@ module.exports = async (req, res) => {
     }
 
     const teacher = await readOneDocFromDb(Teacher, { _id: lesson.teacher });
-    const newLessonsListForTeacher = teacher.lessons.filter(
-      (obj) => String(obj._id) !== String(lesson._id),
-    );
+    const newLessonsListForTeacher = teacher.lessons.filter((obj) => String(obj._id) !== String(lesson._id));
     await updateOneDocInDb(Teacher, { _id: teacher._id }, { lessons: newLessonsListForTeacher });
 
-    const group = await readOneDocFromDb(Teacher, { _id: lesson.group });
-    const newLessonsListForGroup = group.lessons.filter(
-      (obj) => String(obj._id) !== String(lesson._id),
-    );
+    const group = await readOneDocFromDb(Group, { _id: lesson.group });
+    const newLessonsListForGroup = group.lessons.filter((obj) => String(obj._id) !== String(lesson._id));
     await updateOneDocInDb(Group, { _id: group._id }, { lessons: newLessonsListForGroup });
 
     await deleteOneDocFromDb(Lesson, { _id: id });
@@ -34,7 +30,6 @@ module.exports = async (req, res) => {
     return res.status(201)
       .json({ message: 'Lesson successfully deleted' });
   } catch (e) {
-    console.log(e);
     return res.status(500)
       .json({ message: 'Something went wrong' });
   }

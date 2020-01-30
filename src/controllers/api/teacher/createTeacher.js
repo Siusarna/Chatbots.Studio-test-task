@@ -25,7 +25,7 @@ const validData = (name, email, pass, age, subject) => {
   if (!subject) {
     message = 'Field "Subject" is required';
   }
-  return { message };
+  return message;
 };
 
 const hashPass = (pass) => {
@@ -36,13 +36,13 @@ const hashPass = (pass) => {
 module.exports = async (req, res) => {
   try {
     const {
-      name, email, password, age, subject,
+      name, email, password, age, subject, experience,
     } = req.body;
 
     const validatedInput = validData(name, email, password, age, subject);
     if (validatedInput) {
       return res.status(400)
-        .json(validatedInput);
+        .json({ message: validatedInput });
     }
 
     const candidate = await readOneDocFromDb(User, { email });
@@ -61,12 +61,12 @@ module.exports = async (req, res) => {
       _user: user._id,
       subject,
       age,
+      experience,
     });
 
     return res.status(201)
       .json({ message: 'New teacher was successfully created' });
   } catch (e) {
-    console.log(e);
     return res.status(500)
       .json({ message: 'Something went wrong' });
   }

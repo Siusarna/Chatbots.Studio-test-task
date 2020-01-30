@@ -39,7 +39,7 @@ const validData = (
   if (!newSubject) {
     message = 'Field "Subject" is required';
   }
-  return { message };
+  return message;
 };
 
 const hashPass = (pass) => {
@@ -65,7 +65,7 @@ module.exports = async (req, res) => {
     );
     if (validatedInput) {
       return res.status(400)
-        .json(validatedInput);
+        .json({ message: validatedInput });
     }
 
     const user = await readOneDocFromDb(User, {
@@ -80,7 +80,6 @@ module.exports = async (req, res) => {
     const teacher = readOneDocFromDb(Teacher, { _user: user._id });
 
     const objForUser = {
-      email: newEmail || email,
       name: newName || user.name,
     };
 
@@ -89,6 +88,15 @@ module.exports = async (req, res) => {
       experience: newExperience || teacher.experience,
       age: newAge || teacher.age,
     };
+
+    if (newEmail) {
+      const candidate = await readOneDocFromDb(User, { email: newEmail });
+      if (candidate) {
+        return res.status(400)
+          .json({ message: 'User with newEmail is already exist' });
+      }
+      objForUser.email = newEmail;
+    }
 
     if (newPassword) {
       const isMatch = await bcrypt.compare(password, user.password);
@@ -105,7 +113,6 @@ module.exports = async (req, res) => {
     return res.status(201)
       .json({ message: 'Teacher was successfully updated ' });
   } catch (e) {
-    console.log(e);
     return res.status(500)
       .json({ message: 'Something went wrong' });
   }

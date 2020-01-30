@@ -31,7 +31,6 @@ const login = async (req, res) => {
     setDataInCookie(res, 'refreshToken', refreshToken, config.jwt.tokens.refresh.expiresIn);
     return res.send('ok');
   } catch (e) {
-    console.log(e);
     return res.status(500)
       .json({ message: 'Something went wrong' });
   }

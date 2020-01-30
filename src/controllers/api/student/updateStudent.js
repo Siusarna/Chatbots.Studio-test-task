@@ -81,9 +81,17 @@ module.exports = async (req, res) => {
     }
 
     const objForUser = {
-      email: newEmail || email,
       name: newName || user.name,
     };
+
+    if (newEmail) {
+      const candidate = await readOneDocFromDb(User, { email: newEmail });
+      if (candidate) {
+        return res.status(400)
+          .json({ message: 'User with newEmail is already exist' });
+      }
+      objForUser.email = newEmail;
+    }
 
     if (newPassword) {
       const isMatch = await bcrypt.compare(password, user.password);
@@ -107,7 +115,6 @@ module.exports = async (req, res) => {
     return res.status(201)
       .json({ message: 'Student was successfully updated ' });
   } catch (e) {
-    console.log(e);
     return res.status(500)
       .json({ message: 'Something went wrong' });
   }

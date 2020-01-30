@@ -11,7 +11,6 @@ module.exports = async (req, res) => {
     res.status(200)
       .json(groups);
   } catch (e) {
-    console.log(e);
     res.status(500)
       .json({ message: 'Something went wrong' });
   }

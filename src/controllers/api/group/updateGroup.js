@@ -12,7 +12,7 @@ const validData = (name) => {
   if (!isLength(name, { min: 2 })) {
     message = 'The group name is too short';
   }
-  return { message };
+  return message;
 };
 
 const createStudentsList = async (student, successful, failed) => {
@@ -42,20 +42,30 @@ const updateStudentsList = async (student) => {
   await updateOneDocInDb(Student, { _id: student._id }, { group: null });
 };
 
-const deleteGroupInPreviousStudent = async (groupId) => {
+const deleteGroupInPreviousStudents = async (groupId) => {
   const { students } = await readOneDocFromDb(Group, { _id: groupId });
   const promises = students.map(updateStudentsList);
   await Promise.all(promises);
 };
 
-const createListWithUpdatedGroup = async (student, newGroup, listWithUpdatedGroup) => {
-  listWithUpdatedGroup.push(await updateOneDocInDb(Student, { _id: student._id }, { group: newGroup._id }));
+const deleteStudentFromGroup = async (student) => {
+  const group = await readOneDocFromDb(Group, { _id: student.group });
+  const newStudentsList = group.students.filter((obj) => String(obj._id) !== String(student._id));
+  await updateOneDocInDb(Group, { _id: group._id }, { students: newStudentsList });
 };
 
-const addNewGroupForStudents = async (newGroupName, successfulStudents) => {
-  const newGroup = await readOneDocFromDb(Group, { name: newGroupName });
+const deleteStudentsFromPreviousGroup = async (successful) => {
+  const promises = successful.map(deleteStudentFromGroup);
+  await Promise.all(promises);
+};
+
+const createListWithUpdatedGroup = async (student, groupId, listWithUpdatedGroup) => {
+  listWithUpdatedGroup.push(await updateOneDocInDb(Student, { _id: student._id }, { group: groupId }));
+};
+
+const addNewGroupForStudents = async (groupId, successfulStudents) => {
   const listWithUpdatedGroup = [];
-  const promises = successfulStudents.map((student) => createListWithUpdatedGroup(student, newGroup, successfulStudents));
+  const promises = successfulStudents.map((student) => createListWithUpdatedGroup(student, groupId, listWithUpdatedGroup));
   await Promise.all(promises);
   return listWithUpdatedGroup;
 };
@@ -67,7 +77,7 @@ module.exports = async (req, res) => {
     const validatedInput = validData(name);
     if (validatedInput) {
       return res.status(400)
-        .json(validatedInput);
+        .json({ message: validatedInput });
     }
 
     const candidate = await readOneDocFromDb(Group, { name });
@@ -82,14 +92,14 @@ module.exports = async (req, res) => {
         .json({ message: `This students doesn't found: ${JSON.stringify(failed)}` });
     }
 
-    await deleteGroupInPreviousStudent(candidate._id);
-    const studentListWithUpdatedGroup = await addNewGroupForStudents(name, successful);
+    await deleteGroupInPreviousStudents(candidate._id);
+    await deleteStudentsFromPreviousGroup(successful);
+    const studentListWithUpdatedGroup = await addNewGroupForStudents(candidate._id, successful);
     await updateOneDocInDb(Group, { name }, { students: studentListWithUpdatedGroup });
 
     return res.status(201)
       .json({ message: 'Group was successfully updated ' });
   } catch (e) {
-    console.log(e);
     return res.status(500)
       .json({ message: 'Something went wrong' });
   }

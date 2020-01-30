@@ -19,7 +19,7 @@ const validData = (name, email, pass) => {
   if (!isLength(name, { min: 4 })) {
     message = 'The name is too short';
   }
-  return { message };
+  return message;
 };
 
 const hashPass = (pass) => {
@@ -37,7 +37,7 @@ const createStudent = async (req, res) => {
     const validatedInput = validData(name, email, password, groupName);
     if (validatedInput) {
       return res.status(400)
-        .json(validatedInput);
+        .json({ message: validatedInput });
     }
 
     const candidate = await readOneDocFromDb(User, { email });
@@ -69,7 +69,6 @@ const createStudent = async (req, res) => {
     return res.status(201)
       .json({ message: 'New student was successfully created' });
   } catch (e) {
-    console.log(e);
     return res.status(500)
       .json({ message: 'Something went wrong' });
   }

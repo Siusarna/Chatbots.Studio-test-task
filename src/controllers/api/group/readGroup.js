@@ -10,7 +10,7 @@ const validData = (name) => {
   if (!isLength(name, { min: 2 })) {
     message = 'The group name is too short';
   }
-  return { message };
+  return message;
 };
 
 module.exports = async (req, res) => {
@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
     const validatedInput = validData(name);
     if (validatedInput) {
       return res.status(400)
-        .json(validatedInput);
+        .json({ message: validatedInput });
     }
     const group = await readOneDocFromDb(Group, { name });
     if (!group) {
@@ -31,7 +31,6 @@ module.exports = async (req, res) => {
     return res.status(200)
       .json(group);
   } catch (e) {
-    console.log(e);
     return res.status(500)
       .json({ message: 'Something went wrong' });
   }

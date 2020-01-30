@@ -11,7 +11,7 @@ const validData = (email) => {
   if (!isEmail(email)) {
     message = 'Incorrect email';
   }
-  return { message };
+  return message;
 };
 
 
@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
     const validatedInput = validData(email);
     if (validatedInput) {
       return res.status(400)
-        .json(validatedInput);
+        .json({ message: validatedInput });
     }
 
     const candidate = await readOneDocFromDb(User, {
@@ -40,7 +40,6 @@ module.exports = async (req, res) => {
     return res.status(201)
       .json({ message: 'Teacher was successfully deleted' });
   } catch (e) {
-    console.log(e);
     return res.status(500)
       .json({ message: 'Something went wrong' });
   }

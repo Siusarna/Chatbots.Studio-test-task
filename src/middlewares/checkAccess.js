@@ -7,7 +7,7 @@ const { readOneDocFromDb } = require('../db/index');
 const User = mongoose.model('User');
 
 module.exports = async (req, res, next) => {
-  const { accessToken } = req.cookies || req.local;
+  const accessToken = req.cookies.accessToken || req.local.accessToken;
   const payload = jwt.verify(accessToken, config.jwt.secret);
   const user = await readOneDocFromDb(User, { _id: payload.userId });
   if (user.role !== 'admin') {
