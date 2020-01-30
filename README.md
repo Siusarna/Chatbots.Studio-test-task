@@ -43,5 +43,5 @@ Time must be in format "hh:mm";
 5. Update lesson: PUT method in "/lesson" with body: `{"id": "5e32d77472a72d2d1c457616", "newSubject": "NEWWWW", "newTeacher": "NEWTEACHER@TEST.TEST", "newGroup": "NEWTEST", "newClassroom": "NEWCLASSROOM", "newStartTime": "NEW", "newEndTime": "NEW"}`. 
 Only field "id" is required, other of your choice; 
 
-[Schema of my database](shorturl.at/jpKT1])
+[Schema of my database](https://shorturl.at/jpKT1])
 
