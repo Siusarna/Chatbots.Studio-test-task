@@ -1,17 +1,18 @@
-const {readDocFromDb} = require ('../../../db/index');
-const mongoose = require ('mongoose');
-require ('../../../models/index');
+const mongoose = require('mongoose');
+const { readDocFromDb } = require('../../../db/index');
+require('../../../models/index');
 
-const Group = mongoose.model ('Group');
+const Group = mongoose.model('Group');
 
 module.exports = async (req, res) => {
-    try {
+  try {
+    const groups = await readDocFromDb(Group, {});
 
-        const groups = await readDocFromDb (Group, {});
-
-        res.status (200).json (groups);
-    } catch (e) {
-        console.log (e);
-        res.status (500).json ({message: 'Something went wrong'});
-    }
+    res.status(200)
+      .json(groups);
+  } catch (e) {
+    console.log(e);
+    res.status(500)
+      .json({ message: 'Something went wrong' });
+  }
 };

@@ -1,7 +1,5 @@
-const deleteOneDocFromDb = async (model, filter) => {
-    return model.deleteOne (filter);
-};
+const deleteOneDocFromDb = async (model, filter) => model.deleteOne(filter);
 
 module.exports = {
-    deleteOneDocFromDb
+  deleteOneDocFromDb,
 };

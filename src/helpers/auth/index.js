@@ -1,5 +1,5 @@
-const {getAndUpdateTokens} = require ('./createAndUpdateToken');
+const { getAndUpdateTokens } = require('./createAndUpdateToken');
 
 module.exports = {
-    getAndUpdateTokens
+  getAndUpdateTokens,
 };

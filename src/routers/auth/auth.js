@@ -1,5 +1,5 @@
-const auth = require ('../../controllers/api/auth/index');
+const auth = require('../../controllers/api/auth/index');
 
-module.exports = app => {
-    app.post ('/login', auth.login);
+module.exports = (app) => {
+  app.post('/login', auth.login);
 };

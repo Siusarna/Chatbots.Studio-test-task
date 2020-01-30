@@ -1,7 +1,7 @@
-const checkToken = require ('./checkToken');
-const checkAccess = require ('./checkAccess');
+const checkToken = require('./checkToken');
+const checkAccess = require('./checkAccess');
 
 module.exports = {
-    checkToken,
-    checkAccess
+  checkToken,
+  checkAccess,
 };
